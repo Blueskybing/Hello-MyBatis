@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.mapper.PlayMapper">
+    <select id="selectGame" resultType="com.data.mapper.Game">
+        SELECT game_id AS gameId,name FROM play_game WHERE game_id = #{gameId}
+    </select>
+    <select id="selectGameListByCategoryId" resultType="com.data.mapper.Game">
+        SELECT
+        game_id AS gameId,
+        name
+        FROM play_game AS pg
+        WHERE game_id
+        IN
+        (
+        SELECT
+        game_id
+        FROM play_category_game
+        WHERE category_id = #{categoryId}
+        )
+        AND pg.deleted = 0
+    </select>
+    <select id="selectGameCount" parameterType="map" resultType="int">
+        SELECT
+            COUNT(DISTINCT game_id) AS gameCount
+        FROM play_game
+        WHERE created_at >= '2015-01-01'
+        AND created_at <![CDATA[<]]> '2017-01-01'
+    </select>
+</mapper>
